@@ -12,4 +12,11 @@ export default defineConfig({
       web: [/.[tj]sx$/],
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "./src/assets/styles/global.scss";'
+      }
+    }
+  }
 });

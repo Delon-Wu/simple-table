@@ -1,0 +1,42 @@
+.simple-table_table {
+  text-align: left;
+  border-radius: 2px 2px 0 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+.simple-table_table>thead>tr>th, .simple-table_table>tbody>tr>td {
+  @extend .global-pd-10;
+  text-align: left;
+  transition: background-color .3s;
+}
+
+.simple-table_table>thead>tr>th {
+  background-color: $global-bg-color-gray;
+  position: relative;
+  color: #000000d9;
+  font-weight: 500;
+  border-bottom: 1px solid $global-brd-color-gray;
+  cursor: pointer;
+
+  &:not(:last-child)::before {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 1px;
+    height: 1.6em;
+    background-color: #0000000f;
+    transform: translateY(-50%);
+    transition: background-color .3s;
+    content: "";
+  }
+}
+
+.simple-table_table>tbody>tr>td {
+  border-bottom: 1px solid $global-brd-color-gray;
+}
+
+.simple-table_table>tbody>tr:hover>td, .simple-table_cell-sort {
+  background-color: $global-bg-color-gray;
+}
