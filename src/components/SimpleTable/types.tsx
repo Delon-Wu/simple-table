@@ -1,4 +1,4 @@
-interface ColumnItemStruct{
+export interface ColumnItemStruct{
   title: string,
   dataIndex: string,
   defaultSortOrder?: string,

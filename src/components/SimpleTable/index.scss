@@ -37,6 +37,6 @@
   border-bottom: 1px solid $global-brd-color-gray;
 }
 
-.simple-table_table>tbody>tr:hover>td {
+.simple-table_table>tbody>tr:hover>td, .simple-table_cell-sort {
   background-color: $global-bg-color-gray;
 }
