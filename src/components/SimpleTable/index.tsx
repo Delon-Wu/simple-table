@@ -43,7 +43,7 @@ export default defineComponent({
     const pageSize = ref(10);
     const theSortDirections = ref<'ascend' | 'descend' | '' | string>('');
     const sortedDataIndex = ref<string>('');
-    const sortedDataSource = ref<unknown>([]);
+    const sortedDataSource = ref([]);
   
     // 当前页码的数据
     let curPageData = computed(() => {
