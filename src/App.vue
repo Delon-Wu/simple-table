@@ -1,93 +1,39 @@
 <script setup lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import SimpleTable from "./components/SimpleTable";
-import { Column } from "./components/SimpleTable/types";
+import FyTable from "./components/FyTable";
+import { Column } from "./components/FyTable/types";
+import { mock } from 'mockjs';
 
-const data = [
-  {
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-  {
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  },
-  {
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
+const { data } = mock({
+  'data|0-200': [{
+    'name': '@cname',
+    'age|1-110': 100,
+    'address|': '@county(true)'
+  }]
+});
 const columns: Column = [
   {
-    title: 'Name',
+    title: '姓名',
     dataIndex: 'name',
     sorter: (a, b) => a.name.length - b.name.length,
     sortDirections: ['descend'],
   },
   {
-    title: 'Age',
+    title: '年龄',
     dataIndex: 'age',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
   },
   {
-    title: 'Address',
+    title: '出生地',
     dataIndex: 'address'
   },
 ];
 </script>
 
 <template>
-  <SimpleTable :data-source="data" :columns="columns" />
+  <FyTable :data-source="data" :columns="columns" />
 </template>
 
 <style>
