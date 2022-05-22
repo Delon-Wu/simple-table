@@ -1,27 +1,190 @@
-# 丰羽计划课前练习
+# 表格组件封装——丰羽计划
 
-实现一个表格组件，功能：
+## 写在前面
 
-- 渲染表头
-- 渲染表格主体内容
-- 分页功能(上一页，下一页，跳页（输入框输入）)
-- 排序功能(顺序/倒叙/恢复无序)
+### 技术栈 
+- vite
+- scss
+- vue3
+- tsx
 
-特殊说明：
+### 启动前准备 
+`npm install` 或 `yarn`
 
-- 样式无要求，能看即可
-- 推荐使用 vue3 + tsx 结合组合式 API 完成
-  - 如果对 tsx 语法不熟悉，可以使用 vue template
-  - 如果对 vue3 语法不熟悉, 可以使用 vue2 + @vue/composition-api
-  - 如果对 vue 技术栈不熟悉，可以使用其他技术栈
+### 启动项目 
+`npm run dev`
 
-其他要求：
+### 项目打包
+`npm run build`
 
-- UML 建模、API 设计，以及可运行的代码
-- 单测代码、覆盖率分析
-- 良好的代码、注释、文档等
-- 具备可扩展性设计（例如：筛选（过滤）功能）
+### 表格截图：
+![image](./src/assets/demo.jpg)
 
-demo：
+## Code Demo
 
-![image](src/assets/demo.jpg)
+```html
+<template>
+  <fy-table
+    :columns="columns"
+    :data-source="dataSource"
+    :loading="loading"
+    :pagination="pagination"
+    :page-change="handlePageChange"
+    :load-data="fetchData"
+  >
+    
+  </fy-table>
+</template>
+<script lang="ts">
+  import { defineComponent } from 'vue';
+
+  const data = [
+  {
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  },
+  {
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  },
+  {
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  },
+  {
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 2 Lake Park',
+  },
+  {
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  },
+  {
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  },
+  {
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  },
+  {
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 2 Lake Park',
+  },
+  {
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park',
+  },
+  {
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 1 Lake Park',
+  },
+  {
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park',
+  },
+  {
+    name: 'Jim Red',
+    age: 32,
+    address: 'London No. 2 Lake Park',
+  },
+],
+columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    sorter: (a, b) => a.name.length - b.name.length,
+    sortDirections: ['descend'],
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age,
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address'
+  },
+],
+pagination = {
+  current: 1,
+  total: 9,
+  pageSize: 10
+}
+params = {
+  name: 'Jim Red'
+};
+
+let loading = false;
+
+const handlePageChange = (cur, next) => {
+  console.log('Current page: ' + cur);
+  console.log('Next page: ' + next);
+}
+
+const fetchData = (Object.assign(pagination, params)) => {
+  return new Promise((res, rej) => {
+    loading = true;
+    setTimeout(() => {
+      loading = fasle;
+      res(dataSource);
+    }, 3000)
+  });
+}
+
+  export default defineComponent({
+    setup() {
+      return {
+        columns,
+        pagination,
+        loading,
+        dataSource: data,
+        handlePageChange,
+        fetchData
+      }
+
+    }
+  })
+</script>
+```
+
+
+## API
+
+> props 
+
+Name | Description | Type | Required | Default
+ -- | -- | -- | -- | --
+ datasource | 表格的源数据 | Array | false | \- 
+ loadData | 请求表格数据的api | Promise | true | \-
+ loading | 表格的loading遮罩，真值时加上表格遮罩 | Boolean | false | \-
+ columns | 表格的配置，详情查看下表columns | Array | true | \-
+ pagination | 表格的分页配置，详情见下方描述 | Object | false | \-
+
+> columns
+
+Name | Description | Type | Required | Default
+ -- | -- | -- | -- | --
+ header 列标题 | 
+
+> pagination
+ 表格的分页器配置，若不配置，则没有分页，若配置请参照下配置：
+```typescript
+interface PaginationConfig {
+  total: number,
+  pageSize: number,
+  current: number
+}
+```

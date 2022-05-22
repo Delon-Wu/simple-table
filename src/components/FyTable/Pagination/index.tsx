@@ -30,7 +30,7 @@ export default defineComponent({
       slideWindow: {
         leftMostPage: 0,
         rightMostPage: 0,
-        alive: false
+        isAlive: false
       }
     };
   },
@@ -51,7 +51,7 @@ export default defineComponent({
 
   mounted() {
     if (this.total > 7) {
-      this.slideWindow.alive = true;
+      this.slideWindow.isAlive = true;
       this.slideWindow.leftMostPage = 1;
       this.slideWindow.rightMostPage = 5;
     }
@@ -73,23 +73,25 @@ export default defineComponent({
       this.change(this.curPage);
     },
 
+    // TODO 最左最右计算需要加入curPage驱动
     handleJumpPrev5Page() {
       if (this.slideWindow.leftMostPage <= 5) {
         this.slideWindow.leftMostPage = 1;
         this.slideWindow.rightMostPage = 5;
         this.curPage = 3;
       } else {
-        this.slideWindow.leftMostPage -= 5;
-        this.slideWindow.rightMostPage -= 5;
-        this.curPage = this.slideWindow.leftMostPage + 2;
+        this.slideWindow.leftMostPage = this.curPage - 7;
+        this.slideWindow.rightMostPage = this.curPage - 3;
+        this.curPage -= 5;
       }
       console.log(`当前的slideWindow范围是：[${this.slideWindow.leftMostPage}, ${this.slideWindow.rightMostPage}]`);
     },
 
+    // TODO 最左最右计算需要加入curPage驱动
     handleJumpNext5Page() {
-      if (this.slideWindow.rightMostPage > (this.total - 4)) {
-        this.slideWindow.leftMostPage = this.total - 4;
-        this.slideWindow.rightMostPage = this.total;
+      if (this.slideWindow.rightMostPage > (this.totalPage - 4)) {
+        this.slideWindow.leftMostPage = this.totalPage - 4;
+        this.slideWindow.rightMostPage = this.totalPage;
       } else {
         this.slideWindow.leftMostPage = this.slideWindow.leftMostPage + 5;
         this.slideWindow.rightMostPage = this.slideWindow.leftMostPage + 5;
@@ -106,12 +108,13 @@ export default defineComponent({
           <button disabled={this.curPage <= 1} onClick={this.handleJumpPrev}>&lt;</button>
         </li>
         {
-          this.slideWindow.alive ?
+          this.slideWindow.isAlive ?
             <>
-              {this.slideWindow.leftMostPage !== 1 ? <li class="pagination-item" onClick={() => this.handleClickItem(1)}>1</li> : null}
-              <li class="pagination-jump-prev" onClick={this.handleJumpPrev5Page}>
-                ...
-              </li>
+              { this.slideWindow.leftMostPage !== 1 ?
+                <>
+                  <li class="pagination-item" onClick={() => this.handleClickItem(1)}>1</li>
+                  <li class="pagination-jump-prev" onClick={this.handleJumpPrev5Page}>...</li>
+                </> : null }
               {
                 new Array(5).fill(this.slideWindow.leftMostPage).map((left, i) => (
                   <li
@@ -122,10 +125,12 @@ export default defineComponent({
                   </li>
                 ))
               }
-              <li class="pagination-jump-next" onClick={this.handleJumpNext5Page}>
-                ...
-              </li>
-              {this.slideWindow.leftMostPage !== this.totalPage ? <li class="pagination-item" onClick={() => this.handleClickItem(this.totalPage)}>{this.totalPage}</li> : null}
+              { this.slideWindow.rightMostPage !== this.totalPage ?
+                <>
+                  <li class="pagination-jump-next" onClick={this.handleJumpNext5Page}>...</li>
+                  <li class="pagination-item" onClick={() => this.handleClickItem(this.totalPage)}>{this.totalPage}</li>
+                </> : null
+              }
             </> :
             <>
               {
