@@ -2,8 +2,10 @@
  * @file 表格的头部
 */
 import { defineComponent, ref } from "vue";
-import { SORT_WAYS } from './const';
 import { ColumnItemStruct } from './types';
+
+// 排序方式,ascend: 升序;descend: 降序; '': 无排序;
+export const SORT_WAYS: Array<string> = ['ascend', 'descend', '' ];
 
 // 排序方式枚举
 enum SortWaysEnum {

@@ -68,7 +68,7 @@ export default defineComponent({
         </table>
 
         {/* 分页 */}
-        <Pagination change={handlePageChange} total={props.dataSource.length} page-size={pageSize.value} />
+        <Pagination onChange={handlePageChange} total={props.dataSource.length} page-size={pageSize.value} />
       </div>
     );
   },
