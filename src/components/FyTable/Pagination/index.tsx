@@ -71,39 +71,28 @@ export default defineComponent({
   methods: {
     // 点击页码事件处理
     handleClickItem(pageNum: number) {
+      const { curPage, totalPage } = this;
+
       // 更新slideWindow
       if (this.slideWindow.isAlive) {
-        if (pageNum <= SLIDE_WINDOW_WIDTH_5_MIDDLE) {
-          this.slideWindow.leftMostPage = 1;
-          this.slideWindow.rightMostPage = SLIDE_WINDOW_WIDTH_5;
-        } else if (pageNum >= this.totalPage - SLIDE_WINDOW_WIDTH_5_MIDDLE) {
-          this.slideWindow.rightMostPage = this.totalPage;
-          this.slideWindow.leftMostPage = this.totalPage - SLIDE_WINDOW_WIDTH_5 + 1;
-        } else {
-          this.moveSlideWindow(pageNum - this.curPage);
-        }
+        this.moveSlideWindowTo(pageNum)
       }
-      // 注意最后赋值
+
       this.curPage = pageNum;
     },
 
     // 往前一页处理
     handleJumpPrev() {
       this.curPage = this.curPage > 1 ? this.curPage - 1 : 1;
-      if (this.curPage <= this.totalPage - SLIDE_WINDOW_WIDTH_5_MIDDLE) {
-        this.moveSlideWindow(-1);
-      }
+      this.moveSlideWindowTo(this.curPage);
     },
 
     // 往后一页处理
     handleJumpNext() {
       this.curPage = this.curPage < this.totalPage ? this.curPage + 1 : this.totalPage;
-      if (this.curPage > SLIDE_WINDOW_WIDTH_5_MIDDLE) {
-        this.moveSlideWindow(1);
-      }
+      this.moveSlideWindowTo(this.curPage);
     },
 
-    // TODO 最左最右计算需要加入curPage驱动
     // 往前跳转 5 页处理
     handleJumpPrev5Page() {
       if (this.slideWindow.leftMostPage <= SLIDE_WINDOW_WIDTH_5) {
@@ -118,10 +107,9 @@ export default defineComponent({
       console.log(`当前的slideWindow范围是：[${this.slideWindow.leftMostPage}, ${this.slideWindow.rightMostPage}]`);
     },
 
-    // TODO 最左最右计算需要加入curPage驱动
     // 往后跳转 5 页处理
     handleJumpNext5Page() {
-      if (this.slideWindow.rightMostPage > (this.totalPage - SLIDE_WINDOW_WIDTH_5)) {
+      if (this.slideWindow.rightMostPage > this.totalPage - SLIDE_WINDOW_WIDTH_5) {
         this.slideWindow.leftMostPage = this.totalPage - SLIDE_WINDOW_WIDTH_5 + 1;
         this.slideWindow.rightMostPage = this.totalPage;
         this.curPage = this.totalPage
@@ -134,14 +122,21 @@ export default defineComponent({
     },
 
     /**
-     * @param steps - 任意整数，大于零时往后移动steps，反之则往前移动steps。
+     * @param {Number} moveTo - 移动到的目标页。
      */
-    moveSlideWindow (steps: number = SLIDE_WINDOW_WIDTH_5) {
-      let leftMostPage = this.slideWindow.leftMostPage + steps,
-          rightMostPage = this.slideWindow.rightMostPage + steps;
+    moveSlideWindowTo (moveTo:number) {
+      let leftMostPage = 0,
+          rightMostPage = 0;
 
-      if (leftMostPage < 1 || rightMostPage > this.total) {
-        return;
+      if (moveTo <= SLIDE_WINDOW_WIDTH_5_MIDDLE) {
+        leftMostPage = 1;
+        rightMostPage = SLIDE_WINDOW_WIDTH_5;
+      } else if (moveTo > this.totalPage - SLIDE_WINDOW_WIDTH_5_MIDDLE) {
+        leftMostPage = this.totalPage - SLIDE_WINDOW_WIDTH_5 + 1;
+        rightMostPage = this.totalPage;
+      } else {
+        leftMostPage = moveTo - SLIDE_WINDOW_WIDTH_5_MIDDLE + 1;
+        rightMostPage = moveTo + SLIDE_WINDOW_WIDTH_5_MIDDLE - 1;
       }
 
       this.slideWindow.leftMostPage = leftMostPage;

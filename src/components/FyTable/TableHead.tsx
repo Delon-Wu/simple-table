@@ -47,7 +47,7 @@ export default defineComponent({
         }
 
         let tempData = [...props.dataSource];
-        // 轮询排序的数组
+        // 轮询排序方式的数组
         let theSortWays = [...SORT_WAYS, SORT_WAYS[0]];
         let curSortWay = theSortWays.findIndex((item) => item === theSortDirections.value);
 
@@ -80,7 +80,7 @@ export default defineComponent({
                 <th title={item.sorter ? SORT_STATUS_DESC[theSortDirections.value] : ''}
                     onClick={() => handleSort(item as ColumnItemStruct)}>
                   {item.title}
-                  {/* TODO 待添加筛选UI,筛选功能已有 */}
+                  {/* TODO 待添加排序UI,排序功能已有 */}
                 </th>
               ))
             }
