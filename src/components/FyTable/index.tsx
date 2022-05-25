@@ -26,8 +26,8 @@ export default defineComponent({
     const curPage = ref(1);
     // TODO 每页显示数据量可选，目前写死每页显示十条
     const pageSize = ref(10);
-    const theSortDirections = ref<'ascend' | 'descend' | '' | string>('');
-    const sortedDataIndex = ref<string>('');
+    const theSortDirection = ref('');
+    const sortedDataIndex = ref('');
     const sortedDataSource = ref<{[key: string]: any}>([]);
 
     // 当前页码的数据
@@ -40,14 +40,13 @@ export default defineComponent({
 
     // 页码改变后的处理
     const handlePageChange = (cur: number) => {
-      console.log('当前页码：', cur)
       curPage.value = cur;
     };
 
-    const handleSort = (sortedData: {[key: string]: any}, dataIndex: string, sortDirections: string) => {
+    const handleSort = (sortedData: {[key: string]: any}, dataIndex: string, sortDirection: string) => {
       sortedDataSource.value = sortedData;
       sortedDataIndex.value = dataIndex;
-      theSortDirections.value = sortDirections;
+      theSortDirection.value = sortDirection;
     };
 
     return () => (
@@ -63,7 +62,7 @@ export default defineComponent({
             cur-page-data={curPageData.value}
             columns={props.columns}
             sorted-data-index={sortedDataIndex.value}
-            the-sort-directions={theSortDirections.value}
+            the-sort-direction={theSortDirection.value}
           />
         </table>
 

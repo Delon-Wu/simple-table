@@ -2,22 +2,15 @@
  * @file 表格的头部
 */
 import { defineComponent, ref } from "vue";
-import { ColumnItemStruct } from './types';
+import { ColumnItemStruct, SortWaysEnum } from './types';
 
-// 排序方式,ascend: 升序;descend: 降序; '': 无排序;
-export const SORT_WAYS: Array<string> = ['ascend', 'descend', '' ];
-
-// 排序方式枚举
-enum SortWaysEnum {
-  Ascend = 'ascend',
-  Descend = 'descend',
-  Default = ''
-};
+// 默认的排序方式顺序,ascend: 升序;descend: 降序; '': 无排序;
+export const DEFAULT_SORT_DIRECTIONS: Array<string> = ['ascend', 'descend', 'default' ];
 
 const SORT_STATUS_DESC = {
-  [SortWaysEnum.Ascend]: '当前为升序, 点击降序',
-  [SortWaysEnum.Descend]: '当前为降序, 点击取消排序',
-  [SortWaysEnum.Default]: '当前无排序,点击升序',
+  [SortWaysEnum.Ascend]: '当前为升序',
+  [SortWaysEnum.Descend]: '当前为降序',
+  [SortWaysEnum.Default]: '当前无排序',
 };
 
 export default defineComponent({
@@ -38,38 +31,51 @@ export default defineComponent({
     emits: ['sort'],
 
     setup(props, ctx) {
-      const theSortDirections = ref<'ascend' | 'descend' | ''>('');
-      let sortedDataIndex = '';
+      const theSortDirection = ref<string>(SortWaysEnum.Default);
+      const sortedDataIndex = ref('');
 
       const handleSort = (theColumn: ColumnItemStruct) => {
         if(!theColumn.sorter) {// columns配置中未定义sorter
           return;
         }
 
-        let tempData = [...props.dataSource];
-        // 轮询排序方式的数组
-        let theSortWays = [...SORT_WAYS, SORT_WAYS[0]];
-        let curSortWay = theSortWays.findIndex((item) => item === theSortDirections.value);
+        let theSortWays,
+            tempData = [...props.dataSource];
+        // 初始化轮询排序方式的数组
+        if (theColumn.sortDirections) {
+          if (typeof theColumn.sortDirections === 'string') {
+            theSortWays = [theColumn.sortDirections, SortWaysEnum.Default, theColumn.sortDirections];
+          } else if (Array.isArray(theColumn.sortDirections)) {
+            theSortWays = theColumn.sortDirections.length ? [...theColumn.sortDirections, SortWaysEnum.Default, theColumn.sortDirections[0]] : [];
+          } else {
+            console.warn('The param "sortDirections" only accepted type of string and array!');
+          }
+        } else {
+          // 未配置sortDirections时
+          theSortWays = [...DEFAULT_SORT_DIRECTIONS, DEFAULT_SORT_DIRECTIONS[0]]
+        }
+        let curSortWay = theSortWays.findIndex((item) => item === theSortDirection.value);
 
         // 如果点击其他表头则重置排序方式
-        if (theColumn.dataIndex !== sortedDataIndex) {
+        if (theColumn.dataIndex !== sortedDataIndex.value) {
           curSortWay = -1;
-          sortedDataIndex = theColumn.dataIndex;
+          sortedDataIndex.value = theColumn.dataIndex;
         }
 
-        theSortDirections.value = theSortWays[curSortWay + 1];
+        theSortDirection.value = theSortWays[curSortWay + 1];
 
-        if(theSortDirections.value !== SortWaysEnum.Default) {
-          console.log('排序方式：', theSortDirections.value);
+        if(theSortDirection.value !== SortWaysEnum.Default) {
           tempData.sort((a: unknown, b: unknown): any => {
-            if(theSortDirections.value === SortWaysEnum.Descend) {
+            if(theSortDirection.value === SortWaysEnum.Descend) {
               return theColumn.sorter(a, b);
-            } else if(theSortDirections.value === SortWaysEnum.Ascend) {
+            } else if(theSortDirection.value === SortWaysEnum.Ascend) {
               return theColumn.sorter(b, a);
             }
           });
+        } else {
+          sortedDataIndex.value = '';
         }
-        ctx.emit('sort', tempData, sortedDataIndex, theSortDirections.value);
+        ctx.emit('sort', tempData, sortedDataIndex.value, theSortDirection.value);
       }
 
       return () => (
@@ -77,10 +83,9 @@ export default defineComponent({
           <tr>
             {
               props.columns!.map((item: {} | any) => (
-                <th title={item.sorter ? SORT_STATUS_DESC[theSortDirections.value] : ''}
+                <th title={sortedDataIndex.value === item.dataIndex ? SORT_STATUS_DESC[theSortDirection.value]: ''}
                     onClick={() => handleSort(item as ColumnItemStruct)}>
                   {item.title}
-                  {/* TODO 待添加排序UI,排序功能已有 */}
                 </th>
               ))
             }

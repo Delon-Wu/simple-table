@@ -2,6 +2,7 @@
  * @file 表格体
 */
 import { defineComponent } from "vue";
+import { SortWaysEnum } from './types';
 
 export default defineComponent({
     name: "TableBody",
@@ -22,13 +23,17 @@ export default defineComponent({
         default: () => ''
       },
 
-      theSortDirections: {
+      theSortDirection: {
         type: String,
         default: () => ''
       }
     },
 
     setup(props, ctx) {
+      const isActived = (dataIndex: string): boolean => {
+        return (dataIndex === props.sortedDataIndex) && (props.theSortDirection !== SortWaysEnum.Default)
+      };
+
       return () => (
         <tbody>
           {
@@ -36,7 +41,7 @@ export default defineComponent({
               <tr>
                 {
                   props.columns.map((_item: {} | any) => (
-                    <td class={_item.dataIndex === props.sortedDataIndex && props.theSortDirections ? 'simple-table_cell-sort' : ''}>
+                    <td class={isActived(_item.dataIndex) ? 'simple-table_cell-sort' : ''}>
                       <slot row={row}>{row[_item.dataIndex]}</slot>
                     </td>
                   ))

@@ -93,35 +93,24 @@ export default defineComponent({
       this.moveSlideWindowTo(this.curPage);
     },
 
-    // 往前跳转 5 页处理
-    handleJumpPrev5Page() {
-      if (this.slideWindow.leftMostPage <= SLIDE_WINDOW_WIDTH_5) {
-        this.slideWindow.leftMostPage = 1;
-        this.slideWindow.rightMostPage = SLIDE_WINDOW_WIDTH_5;
-        this.curPage = 1;
-      } else {
-        this.slideWindow.leftMostPage = this.curPage - 7;
-        this.slideWindow.rightMostPage = this.curPage - 3;
-        this.curPage -= SLIDE_WINDOW_WIDTH_5;
-      }
-      console.log(`当前的slideWindow范围是：[${this.slideWindow.leftMostPage}, ${this.slideWindow.rightMostPage}]`);
+    // 快速往前跳转处理
+    handleJumpPrevQuickly () {
+      let moveTo = this.curPage - SLIDE_WINDOW_WIDTH_5;
+
+      this.curPage = moveTo < 1 ? 1 : moveTo;
+      this.moveSlideWindowTo(moveTo);
     },
 
-    // 往后跳转 5 页处理
-    handleJumpNext5Page() {
-      if (this.slideWindow.rightMostPage > this.totalPage - SLIDE_WINDOW_WIDTH_5) {
-        this.slideWindow.leftMostPage = this.totalPage - SLIDE_WINDOW_WIDTH_5 + 1;
-        this.slideWindow.rightMostPage = this.totalPage;
-        this.curPage = this.totalPage
-      } else {
-        this.slideWindow.leftMostPage = this.curPage + 3;
-        this.slideWindow.rightMostPage = this.curPage + 7;
-        this.curPage += SLIDE_WINDOW_WIDTH_5;
-      }
-      console.log(`当前的slideWindow范围是：[${this.slideWindow.leftMostPage}, ${this.slideWindow.rightMostPage}]`);
+    // 快速往后跳转处理
+    handleJumpNextQuickly () {
+      let moveTo = this.curPage + SLIDE_WINDOW_WIDTH_5;
+
+      this.curPage = moveTo > this.totalPage ? this.totalPage : moveTo;
+      this.moveSlideWindowTo(moveTo);
     },
 
     /**
+     * 移动slideWindow到目标页码，如果slidWindow已经到达两端，则停止滑动。
      * @param {Number} moveTo - 移动到的目标页。
      */
     moveSlideWindowTo (moveTo:number) {
@@ -156,7 +145,7 @@ export default defineComponent({
               { this.slideWindow.leftMostPage !== 1 ?
                 <>
                   <li class="pagination-item" onClick={() => this.handleClickItem(1)}>1</li>
-                  { this.curPage === SLIDE_WINDOW_WIDTH_5_MIDDLE + 1 ? null : <li onClick={this.handleJumpPrev5Page} class="pagination-jump-prev" title="往前5页">...</li> }
+                  { this.curPage === SLIDE_WINDOW_WIDTH_5_MIDDLE + 1 ? null : <li onClick={this.handleJumpPrevQuickly} class="pagination-jump-prev" title="往前5页">...</li> }
                 </> : null
               }
               {
@@ -171,7 +160,7 @@ export default defineComponent({
               }
               { this.slideWindow.rightMostPage !== this.totalPage ?
                 <>
-                  { this.curPage === this.totalPage - SLIDE_WINDOW_WIDTH_5_MIDDLE ? null : <li onClick={this.handleJumpNext5Page} class="pagination-jump-next" title="往后5页">...</li> }
+                  { this.curPage === this.totalPage - SLIDE_WINDOW_WIDTH_5_MIDDLE ? null : <li onClick={this.handleJumpNextQuickly} class="pagination-jump-next" title="往后5页">...</li> }
                   <li class="pagination-item" onClick={() => this.handleClickItem(this.totalPage)}>{this.totalPage}</li>
                 </> : null
               }
