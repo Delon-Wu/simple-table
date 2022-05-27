@@ -30,7 +30,7 @@ export default defineComponent({
     },
 
     setup(props, ctx) {
-      const isActived = (dataIndex: string): boolean => {
+      const isSorted = (dataIndex: string): boolean => {
         return (dataIndex === props.sortedDataIndex) && (props.theSortDirection !== SortWaysEnum.Default)
       };
 
@@ -41,7 +41,7 @@ export default defineComponent({
               <tr>
                 {
                   props.columns.map((_item: {} | any) => (
-                    <td class={isActived(_item.dataIndex) ? 'simple-table_cell-sort' : ''}>
+                    <td class={isSorted(_item.dataIndex) ? 'simple-table_cell-sort' : ''}>
                       <slot row={row}>{row[_item.dataIndex]}</slot>
                     </td>
                   ))
