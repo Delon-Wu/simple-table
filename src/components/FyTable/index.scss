@@ -1,4 +1,4 @@
-.simple-table_table {
+.fy-table_table {
   text-align: left;
   border-radius: 2px 2px 0 0;
   border-collapse: separate;
@@ -6,13 +6,13 @@
   width: 100%;
 }
 
-.simple-table_table>thead>tr>th, .simple-table_table>tbody>tr>td {
+.fy-table_table>thead>tr>th, .fy-table_table>tbody>tr>td {
   @extend .global-pd-10;
   text-align: left;
   transition: background-color .3s;
 }
 
-.simple-table_table>thead>tr>th {
+.fy-table_table>thead>tr>th {
   background-color: $global-bg-color-gray;
   position: relative;
   color: #000000d9;
@@ -33,10 +33,10 @@
   }
 }
 
-.simple-table_table>tbody>tr>td {
+.fy-table_table>tbody>tr>td {
   border-bottom: 1px solid $global-brd-color-gray;
 }
 
-.simple-table_table>tbody>tr:hover>td, .simple-table_cell-sort {
+.fy-table_table>tbody>tr:hover>td, .fy-table_cell-sort {
   background-color: $global-bg-color-gray;
 }

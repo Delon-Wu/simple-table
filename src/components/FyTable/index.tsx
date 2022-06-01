@@ -14,11 +14,11 @@ export default defineComponent({
   props: {
     dataSource: {
       type: Array,
-      default: () => []
+      default: []
     },
     columns: {
       type: Array,
-      default: () => []
+      default: []
     }
   },
 
@@ -50,8 +50,8 @@ export default defineComponent({
     };
 
     return () => (
-      <div class="simple-table_table-box">
-        <table class="simple-table_table global-mg-b-10">
+      <div class="fy-table_table-box">
+        <table class="fy-table_table global-mg-b-10">
           <TableHead
             columns={props.columns}
             data-source={props.dataSource}

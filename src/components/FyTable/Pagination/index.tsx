@@ -1,7 +1,7 @@
 /**
  * @file 表格的分页器
 */
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent } from "vue";
 import './index.scss'
 
 // TODO 每页显示数量可选
@@ -33,9 +33,9 @@ export default defineComponent({
     return {
       curPage: 1,
       slideWindow: {
-        leftMostPage: 0,
-        rightMostPage: 0,
-        isAlive: false
+        leftMostPage: 1,
+        rightMostPage: SLIDE_WINDOW_WIDTH_5,
+        isAlive: true
       }
     };
   },
@@ -61,11 +61,7 @@ export default defineComponent({
   },
 
   mounted() {
-    if (this.totalPage > SLIDE_WINDOW_WIDTH_5 + 2) {
-      this.slideWindow.isAlive = true;
-      this.slideWindow.leftMostPage = 1;
-      this.slideWindow.rightMostPage = SLIDE_WINDOW_WIDTH_5;
-    }
+    this.slideWindow.isAlive = this.totalPage > SLIDE_WINDOW_WIDTH_5 + 2;
   },
 
   methods: {
@@ -149,7 +145,7 @@ export default defineComponent({
                 </> : null
               }
               {
-                new Array(5).fill(this.slideWindow.leftMostPage).map((left, i) => (
+                new Array(SLIDE_WINDOW_WIDTH_5).fill(this.slideWindow.leftMostPage).map((left, i) => (
                   <li
                     class={this.curPage === left + i ? 'pagination-item pagination-item-active' : 'pagination-item'}
                     onClick={() => this.handleClickItem(left + i)}
