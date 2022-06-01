@@ -149,7 +149,7 @@ export default defineComponent({
                 </> : null
               }
               {
-                new Array(5).fill(this.slideWindow.leftMostPage).map((left, i) => (
+                new Array(SLIDE_WINDOW_WIDTH_5).fill(this.slideWindow.leftMostPage).map((left, i) => (
                   <li
                     class={this.curPage === left + i ? 'pagination-item pagination-item-active' : 'pagination-item'}
                     onClick={() => this.handleClickItem(left + i)}
