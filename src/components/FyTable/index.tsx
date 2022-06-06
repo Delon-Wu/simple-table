@@ -14,11 +14,11 @@ export default defineComponent({
   props: {
     dataSource: {
       type: Array,
-      default: () => []
+      default: []
     },
     columns: {
       type: Array,
-      default: () => []
+      default: []
     }
   },
 

@@ -19,12 +19,12 @@ export default defineComponent({
     props: {
       columns: {
         type: Array,
-        defaul: () => []
+        defaul: []
       },
 
       dataSource: {
         type: Array,
-        defaul: () => []
+        defaul: []
       }
     },
 
@@ -49,6 +49,7 @@ export default defineComponent({
             theSortWays = theColumn.sortDirections.length ? [...theColumn.sortDirections, SortWaysEnum.Default, theColumn.sortDirections[0]] : [];
           } else {
             console.warn('The param "sortDirections" only accepted type of string and array!');
+            return;
           }
         } else {
           // 未配置sortDirections时

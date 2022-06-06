@@ -1,7 +1,7 @@
 /**
  * @file 表格的分页器
 */
-import { defineComponent, ref, reactive } from "vue";
+import { defineComponent } from "vue";
 import './index.scss'
 
 // TODO 每页显示数量可选
@@ -19,7 +19,7 @@ export default defineComponent({
     },
     change: {
       type: Function,
-      default: () => { }
+      default: () => {}
     },
     pageSize: {
       type: Number,
@@ -33,22 +33,14 @@ export default defineComponent({
     return {
       curPage: 1,
       slideWindow: {
-        leftMostPage: 0,
-        rightMostPage: 0,
-        isAlive: false
+        leftMostPage: 1,
+        rightMostPage: SLIDE_WINDOW_WIDTH_5,
+        isAlive: true
       }
     };
   },
 
   computed: {
-    startPage() {
-      return !!this.total ? 1 : 0;
-    },
-
-    endPage() {
-      return this.total;
-    },
-
     totalPage() {
       return Math.ceil(this.total / this.pageSize);
     }
@@ -61,11 +53,7 @@ export default defineComponent({
   },
 
   mounted() {
-    if (this.totalPage > SLIDE_WINDOW_WIDTH_5 + 2) {
-      this.slideWindow.isAlive = true;
-      this.slideWindow.leftMostPage = 1;
-      this.slideWindow.rightMostPage = SLIDE_WINDOW_WIDTH_5;
-    }
+    this.slideWindow.isAlive = this.totalPage > SLIDE_WINDOW_WIDTH_5 + 2;
   },
 
   methods: {

@@ -10,22 +10,22 @@ export default defineComponent({
     props: {
       curPageData: {
         type: Array,
-        default: () => []
+        default: []
       },
 
       columns: {
         type: Array,
-        default: () => []
+        default: []
       },
 
       sortedDataIndex: {
         type: String,
-        default: () => ''
+        default: ''
       },
 
       theSortDirection: {
         type: String,
-        default: () => ''
+        default: ''
       }
     },
 
