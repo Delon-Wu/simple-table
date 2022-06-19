@@ -2,10 +2,10 @@
  * @file 表格的头部
 */
 import { defineComponent, ref } from "vue";
-import { ColumnItemStruct, SortWaysEnum } from './types';
+import { ColumnItemStruct, SortWaysEnum } from '../types';
 
 // 默认的排序方式顺序,ascend: 升序;descend: 降序; '': 无排序;
-export const DEFAULT_SORT_DIRECTIONS: Array<string> = ['ascend', 'descend', 'default' ];
+const DEFAULT_SORT_DIRECTIONS: Array<string> = ['ascend', 'descend', 'default' ];
 
 const SORT_STATUS_DESC = {
   [SortWaysEnum.Ascend]: '当前为升序',
@@ -31,7 +31,7 @@ export default defineComponent({
     emits: ['sort'],
 
     setup(props, ctx) {
-      const theSortDirection = ref<string>(SortWaysEnum.Default);
+      const theSortDirection = ref<SortWaysEnum>(SortWaysEnum.Default);
       const sortedDataIndex = ref('');
 
       const handleSort = (theColumn: ColumnItemStruct) => {
@@ -63,7 +63,7 @@ export default defineComponent({
           sortedDataIndex.value = theColumn.dataIndex;
         }
 
-        theSortDirection.value = theSortWays[curSortWay + 1];
+        theSortDirection.value = theSortWays[curSortWay + 1] as SortWaysEnum;
 
         if(theSortDirection.value !== SortWaysEnum.Default) {
           tempData.sort((a: unknown, b: unknown): any => {
@@ -79,19 +79,27 @@ export default defineComponent({
         ctx.emit('sort', tempData, sortedDataIndex.value, theSortDirection.value);
       }
 
-      return () => (
+      return {
+        theSortDirection,
+        sortedDataIndex,
+        handleSort,
+      }
+    },
+
+    render () {
+      return (
         <thead>
           <tr>
             {
-              props.columns!.map((item: {} | any) => (
-                <th title={sortedDataIndex.value === item.dataIndex ? SORT_STATUS_DESC[theSortDirection.value]: ''}
-                    onClick={() => handleSort(item as ColumnItemStruct)}>
+              this.columns!.map((item: {} | any) => (
+                <th title={this.sortedDataIndex === item.dataIndex ? SORT_STATUS_DESC[this.theSortDirection] : ''}
+                    onClick={() => this.handleSort(item as ColumnItemStruct)}>
                   {item.title}
                 </th>
               ))
             }
           </tr>
         </thead>
-      );
-    },
+      )
+    }
  });

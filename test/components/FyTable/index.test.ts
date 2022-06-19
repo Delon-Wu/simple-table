@@ -103,7 +103,7 @@ test('当页码变动时，更新curPage', () => {
       columns: TEST_COLUMNS
     },
   });
-  const pagination = wrapper.findComponent('.pagination-box');
+  const pagination = wrapper.findComponent({ name: 'Pagination'});
 
   expect(pagination.vm.$emit('change', 10)).toBeUndefined();
-})
+});

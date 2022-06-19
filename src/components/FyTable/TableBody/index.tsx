@@ -2,7 +2,7 @@
  * @file 表格体
 */
 import { defineComponent } from "vue";
-import { SortWaysEnum } from './types';
+import { SortWaysEnum } from '../types';
 
 export default defineComponent({
     name: "TableBody",

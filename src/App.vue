@@ -31,10 +31,11 @@ const columns: Column = [
     dataIndex: 'address'
   },
 ];
+const pageSize = [10, 30, 50, 100];
 </script>
 
 <template>
-  <FyTable :data-source="data" :columns="columns" />
+  <FyTable :data-source="data" :columns="columns" :page-size="pageSize" />
 </template>
 
 <style>

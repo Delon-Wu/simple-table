@@ -4,7 +4,7 @@ import Pagination from "../../../src/components/FyTable/Pagination";
 
 test('dataLength === 10 时，测试分页器，只有一页，默认位于首页，不可左跳，不可右跳', () => {
   const dataLength = 10;
-  const pageSize = 10;
+  const pageSize = [10];
   const wrapper = mount(Pagination, {
     props: {
       pageSize,
@@ -20,7 +20,7 @@ test('dataLength === 10 时，测试分页器，只有一页，默认位于首�
 
 test('dataLength === 200 时，测试分页器，快进快退5页', async () => {
   const dataLength = 200;
-  const pageSize = 10;
+  const pageSize = [10];
   const wrapper = mount(Pagination, {
     props: {
       pageSize,
@@ -67,4 +67,62 @@ test('dataLength === 200 时，测试分页器，快进快退5页', async () => 
   expect(getCurPage()).toBe(curPage);
 });
 
-test.todo('dataLength = 0 时，');
+test('dataLength = 0 时，', () => {
+  const dataLength = 0;
+  const pageSize = [10];
+  const wrapper = mount(Pagination, {
+    props: {
+      pageSize,
+      total: dataLength,
+    }
+  });
+
+  expect(wrapper.html()).toBeFalsy();
+});
+
+
+test('当dataLength = 120时，改变pageSize', async () => {
+  const dataLength = 120;
+  const pageSize = [10, 20, 30];
+  const wrapper = mount(Pagination, {
+    props: {
+      pageSize,
+      total: dataLength,
+    }
+  });
+  const paginationItems = wrapper.findAll('.pagination-box .pagination-item');
+  const pageSizeSelectEle = wrapper.find('.page-size-select');
+  let thePageSize = '30';
+
+  await pageSizeSelectEle.setValue(thePageSize);
+  expect(paginationItems[paginationItems.length - 1].text()).toBe(120/30);
+});
+
+test('当dataLength = 120时，测试输入跳转', async () => {
+  const dataLength = 120;
+  const pageSize = [10, 20, 30];
+  const wrapper = mount(Pagination, {
+    props: {
+      pageSize,
+      total: dataLength,
+    }
+  });
+  const pageInputEle = wrapper.find('.page-input');
+  let jumpTo = '2'
+
+  await pageInputEle.setValue(jumpTo);
+  await pageInputEle.trigger('blur');
+  expect(wrapper.find('.pagination-item-active').text()).toBe(jumpTo);
+
+  let ChineseText = '中文测试';
+
+  await pageInputEle.setValue(ChineseText);
+  await pageInputEle.trigger('blur');
+  expect(wrapper.find('.pagination-item-active').text()).toBe(jumpTo);
+
+  let largeNumber = 100000000000;
+
+  await pageInputEle.setValue(largeNumber);
+  await pageInputEle.trigger('blur');
+  expect(wrapper.find('.pagination-item-active').text()).toBe(jumpTo);
+});
