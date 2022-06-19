@@ -19,12 +19,12 @@ export default defineComponent({
     props: {
       columns: {
         type: Array,
-        defaul: () => []
+        defaul: []
       },
 
       dataSource: {
         type: Array,
-        defaul: () => []
+        defaul: []
       }
     },
 

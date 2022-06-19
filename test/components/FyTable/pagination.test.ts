@@ -61,9 +61,15 @@ test('dataLength === 200 时，测试分页器，快进快退5页', async () => 
   curPage += 5;
   expect(getCurPage()).toBe(curPage);
 
+  // 回到初始状态
   jumpPrevBtn = wrapper.find('.pagination-jump-prev');
   await jumpPrevBtn.trigger('click');
   curPage = 1;
+  expect(getCurPage()).toBe(curPage);
+
+  let the20PageItem = wrapper.findAll('.pagination-box .pagination-item')[5];
+  await the20PageItem.trigger('click');
+  curPage = 20;
   expect(getCurPage()).toBe(curPage);
 });
 
@@ -110,16 +116,19 @@ test('当dataLength = 120时，测试输入跳转', async () => {
   const pageInputEle = wrapper.find('.page-input');
   let jumpTo = '2'
 
+  // 输入2
   await pageInputEle.setValue(jumpTo);
   await pageInputEle.trigger('blur');
   expect(wrapper.find('.pagination-item-active').text()).toBe(jumpTo);
 
+  // 输入中文，无跳转响应
   let ChineseText = '中文测试';
 
   await pageInputEle.setValue(ChineseText);
   await pageInputEle.trigger('blur');
   expect(wrapper.find('.pagination-item-active').text()).toBe(jumpTo);
 
+  // 输入100000000000
   let largeNumber = 100000000000;
 
   await pageInputEle.setValue(largeNumber);
